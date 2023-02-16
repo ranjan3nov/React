@@ -1,48 +1,43 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
+
+import CardList from './components/card-list/card-list.compnent';
+import Searchbox from './components/search-box/search-box.component';
 import './App.css';
 
-class App extends Component {
+const App = () => {
+  const [searchField, setSearchField] = useState('');
+  const [monster, setMonster] = useState([]);
+  const [filteredMonsters, setFilteredMonsters] = useState(monster);
 
-  constructor() {
-    super();
-
-    this.state = {
-      monster: [],
-    };
-    console.log('1')
-  }
-
-
-  componentDidMount() {
-    console.log('3');
+  useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then((response) => response.json())
-      .then((users) =>
-        this.setState(
-          () => {
-            return { monster: users };
-          },
-          () => {
-            console.log(this.state);
-          }
-        )
-      );
-  }
+      .then((users) => setMonster(users));
 
-  render() {
-    console.log('2')
-    return (
-      <div className='App'>
-        {this.state.monster.map((monster) => {
-          return (
-            <div key={monster.id}>
-              <h1>{monster.name}</h1>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-}
+  }, []);
 
+  useEffect(() => {
+    const newFilteredMonster = monster.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
+    });
+
+    setFilteredMonsters(newFilteredMonster);
+  }, [monster, searchField]);
+
+  const onSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString);
+  };
+  return (
+    <div className='App'>
+      <h1 className='app-title'>Monsters Rolodex </h1>
+      <Searchbox
+        className='monster-search-box'
+        onChangeHandler={onSearchChange}
+        placeholder='Search Monster'
+      />
+      <CardList monster={filteredMonsters} />
+    </div>
+  );
+};
 export default App;
