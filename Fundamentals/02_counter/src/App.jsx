@@ -8,8 +8,10 @@ function App() {
 
   const increaseValue = () => {
     // counter += 1;
-    if (!(counter >= 20))
-      setCounter(++counter);
+    if (!(counter >= 20)) {
+      // setCounter(counter + 1);
+      setCounter((prevCounter) => prevCounter + 1);
+    }
     else
       alert('You have reached Max limit')
     console.log(`Value added ${counter}`);
