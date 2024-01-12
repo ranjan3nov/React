@@ -26,6 +26,7 @@ function App() {
 
   const copyPasswordToClipBoard = useCallback(() => {
     passwordRef.current?.select();
+    passwordRef.current?.setSelectionRange(0, 100);
     window.navigator.clipboard.writeText(password);
   }, [password])
 
